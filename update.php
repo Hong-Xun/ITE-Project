@@ -6,27 +6,27 @@
 <link rel="stylesheet" href="pessdbstyle.css">
 <?php
 	
-if (isset($_POST["btnUpdate"])) {
+if (isset($_POST["btnUpdate"])){
 	
 	require_once 'db.php';
 	
 	$mysqli = mysqli_connect(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE);
 	
-	if($mysqli->connect_errno) {
+	if($mysqli->connect_errno){
 		die("Failed to connect to MySQL: ".$mysqli->connect_errno);
 	}
 	
 	$sql = "UPDATE patrolcar SET patrolcarStatusId = ? WHERE patrolcarId = ? ";
 	
-	if (!($stmt = $mysqli->prepare($sql))) {
+	if (!($stmt = $mysqli->prepare($sql))){
 		die("Prepare failed: ".$mysqli->errno);
 	}
 	
-	if (!$stmt->bind_param('ss', $_POST['patrolCarStatus'], $_POST['patrolCarId'])) {
+	if (!$stmt->bind_param('ss', $_POST['patrolCarStatus'], $_POST['patrolCarId'])){
 		die("Binding parameters failed: ".$stmt->errno);
 	}
 	
-	if (!$stmt->execute()) {
+	if (!$stmt->execute()){
 		die("Update patrolcar table failed: ".$stmt->errno);
 	}
 	
@@ -47,7 +47,7 @@ if (isset($_POST["btnUpdate"])) {
 	  die("Update dispatch table failed: ".$stmt->errno);
     }
 		
-    }  else if ($_POST["patrolCarStatus"] == '3'){ 
+    }else if ($_POST["patrolCarStatus"] == '3'){ 
 	
 		$sql = "SELECT incidentId FROM dispatch WHERE timeCompleted IS NULL AND patrolcarId = ?";
 		
@@ -55,11 +55,11 @@ if (isset($_POST["btnUpdate"])) {
 		die("Prepare failed: ".$mysqli->errno);
 	}
 	
-	if (!$stmt->bind_param('s', $_POST['patrolCarId'])) {
+	if (!$stmt->bind_param('s', $_POST['patrolCarId'])){
 		die("Binding parameters failed: ".$stmt->errno);
 	}
 	
-	if (!$stmt->execute()) {
+	if (!$stmt->execute()){
 		die("Execute failed: ".$stmt->errno);
 	}
 	
@@ -69,35 +69,35 @@ if (isset($_POST["btnUpdate"])) {
 	
 	$incidentId;
 
-	while ($row = $resultset->fetch_assoc()) {
+	while ($row = $resultset->fetch_assoc()){
 		$incidentId = $row['incidentId']; //here
 	}
 	
 	$sql = "UPDATE dispatch SET timeCompleted = NOW() WHERE timeCompleted is NULL AND patrolcarId = ?";
 			
-	if (!($stmt = $mysqli->prepare($sql))) {
+	if (!($stmt = $mysqli->prepare($sql))){
 		die("Prepare failed: ".$mysqli->errno);
 	}
 	
-	if (!$stmt->bind_param('s', $_POST['patrolCarId'])) {
+	if (!$stmt->bind_param('s', $_POST['patrolCarId'])){
 		die("Binding parameters failed: ".$stmt->errno);
 	}
 	
-	if (!$stmt->execute()) {
+	if (!$stmt->execute()){
 		die("Update dispatch table failed: ".$stmt->errno);
 	}
 			
 	$sql = "UPDATE incident SET incidentStatusId = '3' WHERE incidentId = '$incidentId' AND NOT EXISTS (SELECT * FROM dispatch WHERE timeCompleted IS NULL AND incidentId = '$incidentId')";
 			
-	if (!($stmt = $mysqli->prepare($sql))) {
+	if (!($stmt = $mysqli->prepare($sql))){
 		die("Prepare failed 11: ".$mysqli->errno);
 	}
 	
-	if (!$stmt->execute()) {
+	if (!$stmt->execute()){
 		die("Update dispatch table failed: ".$stmt->errno);
 	}
 	
-	$resultset->close();
+	  $resultset->close();
 		
 	}
 		
@@ -113,7 +113,7 @@ if (isset($_POST["btnUpdate"])) {
 </head>
 
 <body>
-      <?php require_once 'nav.php'; ?>
+      <?php require_once 'nav.php';?>
     <br><br>
       <?php
       if (!isset($_POST['btnSearch']))
@@ -144,7 +144,7 @@ else{
   $mysqli = mysqli_connect(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE);
   
   
-  if ($mysqli->connect_errno) {
+  if ($mysqli->connect_errno){
 	  die("Failed to connect to MySQL: ".$mysqli->connect_errno);
   }
  
@@ -158,15 +158,15 @@ else{
 	  die("Binding parameters failed: ".$stmt->errno);
   }
 	
-  if (!$stmt->execute()) {
+  if (!$stmt->execute()){
 	  die("Execute failed failed: ".$stmt->errno);
   }
 
-  if (!($resultset = $stmt->get_result())) {
+  if (!($resultset = $stmt->get_result())){
 	  die("Getting result set failed: ".$stmt->errno);
   }
 
-  if ($resultset->num_rows == 0) {
+  if ($resultset->num_rows == 0){
 	 ?>
 	
      <script>window.location="update.php";</script>
@@ -175,27 +175,28 @@ else{
   $patrolCarId;
   $patrolCarStatusId;
 	
-  while($row = $resultset->fetch_assoc()) {
+  while($row = $resultset->fetch_assoc()){
 	  $patrolCarId = $row['patrolcarId'];
 	  $patrolCarStatusId = $row['patrolcarStatusId'];
   }
 
 	$sql = "SELECT * FROM patrolcar_status";
-	if(!($stmt = $mysqli->prepare($sql))) {
+	
+	if(!($stmt = $mysqli->prepare($sql))){
 		die("Prepare failed: ".$mysqli->errno);
 	}
 	
-	if (!$stmt->execute()) {
+	if (!$stmt->execute()){
 	  die("Execute failed: ".$stmt->errno);
   }
 
-  if (!($resultset = $stmt->get_result())) {
+  if (!($resultset = $stmt->get_result())){
 	  die("Getting result set failed: ".$stmt->errno);
   }
 	
   $patrolCarStatusArray;; 
 	
-  while ($row = $resultset->fetch_assoc()) {
+  while ($row = $resultset->fetch_assoc()){
 	  $patrolCarStatusArray[$row['statusId']] = $row['statusDesc'];
   }
 
@@ -242,8 +243,6 @@ else{
 	</table>
 	</form>
 	</fieldset>
-<?php } ?>
-  
-	
+    <?php } ?>
 </body>
 </html>
